@@ -1,0 +1,5 @@
+run_id: '47e5f87f4e83450bb02186eaf97bade7'
+scaler_x: 'scaler_x_experiment_1.pkl'
+scaler_y: 'scaler_y_experiment_1.pkl'
+algorithm_name: 'RandomForestRegressor()'
+experiment_id: 1

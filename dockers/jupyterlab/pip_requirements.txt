@@ -1,0 +1,43 @@
+#util
+jupyterlab_tabnine
+
+# explanability
+# eli5
+# lime
+shapash
+
+# drift detection
+evidently
+
+# model tracking
+mlflow
+mlflow[pipelines]
+mlflow[extras]
+
+# modeling
+xgboost
+
+# dimensionality reduction
+umap-learn
+
+#viz
+#wordcloud
+
+# api
+fastapi
+
+# db
+#arango
+#duckdb
+#python-arango
+#mongodb
+
+# fs
+#feast
+#dtale
+opendatasets
+#azure
+#sweetviz
+#Autoviz
+#pandas-profiling
+#opendatasets

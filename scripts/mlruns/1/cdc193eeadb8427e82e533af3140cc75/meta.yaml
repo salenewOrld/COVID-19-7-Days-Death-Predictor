@@ -1,0 +1,16 @@
+artifact_uri: file:///usr/src/scripts/mlruns/1/cdc193eeadb8427e82e533af3140cc75/artifacts
+deleted_time: 1664137654767
+end_time: 1664137604358
+entry_point_name: ''
+experiment_id: '1'
+lifecycle_stage: deleted
+name: ''
+run_id: cdc193eeadb8427e82e533af3140cc75
+run_uuid: cdc193eeadb8427e82e533af3140cc75
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1664137602342
+status: 4
+tags: []
+user_id: root

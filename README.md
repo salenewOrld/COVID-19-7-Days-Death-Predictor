@@ -2,7 +2,7 @@
 # Learning Problem
   Regression
 # Project status
-  Green: ready to deploy (API.py in deployment folder)
+  Model: Green; ready to deploy (API.py in deployment folder)
 # CRISP-DM
   Covid New Deaths Prediction #CRISP-DM.pdf
 # Research Methodoly

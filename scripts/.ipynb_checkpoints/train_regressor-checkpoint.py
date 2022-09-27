@@ -5,6 +5,9 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression, SGDRegressor, BayesianRidge, ElasticNet
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 from sklearn.preprocessing import StandardScaler
+from sklearn import preprocessing
+from sklearn.preprocessing import Binarizer
+from sklearn.preprocessing import Normalizer
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import yaml
@@ -27,13 +30,19 @@ class Train:
                 for j in model_type:
                     models.append(eval(f'{j}()'))
         return models
-    def eval_metrics(self, y_true, y_pred):
+    def eval_metrics(self, y_true, y_pred, scaler_y):
+        if self.config['is_scaled']['y'] == 1:
+            print('Scaling data in Evaluation')
+            y_true_new = scaler_y.inverse_transform(y_true.reshape(-1, 1))
+            y_pred_new = scaler_y.inverse_transform(y_pred.reshape(-1, 1))
+            y_true = y_true_new
+            y_pred = y_pred_new
         r2 = r2_score(y_true, y_pred)
         mae = mean_absolute_error(y_true, y_pred)
         mse = mean_squared_error(y_true, y_pred)
         rmse = mean_squared_error(y_true, y_pred, squared=False)
         return [r2, mae, mse, rmse]
-    def train(self, models, x_train, x_test, y_train, y_test):
+    def train(self, models, x_train, x_test, y_train, y_test, scaler_y):
         try :
             current_experiment = dict(mlflow.get_experiment_by_name(self.experiment_name))
             ex_id = current_experiment['experiment_id']
@@ -45,7 +54,7 @@ class Train:
             #mlflow.set_tracking_uri("file:///usr/src/mlruns")
             with mlflow.start_run(experiment_id=ex_id):
                 j.fit(x_train, y_train)
-                metrics = self.eval_metrics(y_test, j.predict(x_test))
+                metrics = self.eval_metrics(y_test, j.predict(x_test), scaler_y)
                 metrics_artifact = {
                     'r2' : metrics[0],
                     'mae' : metrics[1],
@@ -77,21 +86,36 @@ class Train:
         x_test = x_test[self.config['datasets']['x']]
         y_test = y.loc[y.index >= rows_test]
         y_test = y_test[self.config['datasets']['y']].to_numpy().reshape(-1, 1)
-        scaler_x = StandardScaler()
         scaler_y = StandardScaler()
-        if self.config['is_scaled']['x']:
-            x_train = scaler_x.fit_transform(x_train)
-            x_test = scaler_x.transform(x_test)
-        if self.config['is_scaled']['y']:
+        if self.config['is_scaled']['x'] == 1:
+            print("Scaled X")
+            if self.config['is_scaled']['scaler'] == 'StandardScaler':
+                scaler_x = StandardScaler()
+                x_train = scaler_x.fit_transform(x_train)
+                x_test = scaler_x.transform(x_test)
+            elif self.config['is_scaled']['scaler'] == 'MinMaxScaler':
+                scaler_x = preprocessing.MixMaxScaler()
+                x_train = scaler_x.fit_transform(x_train)
+                x_test = scaler_x.transform(x_test)
+            elif self.config['is_scaled']['scaler'] == 'Binarizer':
+                scaler_x = Binarizer().fit(x_train)
+                x_train = scaler_x.fit_transform(x_train)
+                x_test = scaler_x.transform(x_test)
+            else :
+                scaler_x = Normalizer().fit(x_train)
+                x_train = scaler_x.fit_transform(x_train)
+                x_test = scaler_x.transform(x_test)
+            joblib.dump(scaler_x, f'mlruns/scaler_x_{self.experiment_name}.pkl')
+        if self.config['is_scaled']['y'] == 1:
+            print("Scaled Y")
             y_train = scaler_y.fit_transform(y_train)
             y_test = scaler_y.transform(y_test)
-        joblib.dump(scaler_x, f'mlruns/scaler_x_{self.experiment_name}.pkl')
-        joblib.dump(scaler_y, f'mlruns/scaler_y_{self.experiment_name}.pkl')
+            joblib.dump(scaler_y, f'mlruns/scaler_y_{self.experiment_name}.pkl')
         return x_train, x_test, y_train, y_test, scaler_x, scaler_y
     def fit(self):
         models = self.load_models(self.config)
         x_train, x_test, y_train, y_test, scaler_x, scaler_y = self.split_data()
-        self.train(models, x_train, x_test, y_train, y_test)
+        self.train(models, x_train, x_test.reshape(-1, 1), y_train, y_test.reshape(-1, 1), scaler_y)
         print('Successfully trained')
 def read_yaml(FILE_NAME):
     with open(f'/usr/src/configs/{FILE_NAME}', 'r') as yaml_file:

@@ -1,0 +1,6 @@
+artifact_location: file:///usr/src/scripts/mlruns/4
+creation_time: 1664281603830
+experiment_id: '4'
+last_update_time: 1664281603830
+lifecycle_stage: active
+name: experiment_01

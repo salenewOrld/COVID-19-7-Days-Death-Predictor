@@ -1,0 +1,17 @@
+artifact_path: BayesianRidge()
+flavors:
+  python_function:
+    env: conda.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.9.13
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.1.2
+mlflow_version: 1.29.0
+model_uuid: 2f8176af525a4959b3fa3c800c5aeeec
+run_id: ac1e2a5eca7d4d469cff85c4c65ffdeb
+utc_time_created: '2022-09-27 14:04:22.315170'

@@ -1,0 +1,17 @@
+artifact_path: SGDRegressor()
+flavors:
+  python_function:
+    env: conda.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.9.13
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.1.2
+mlflow_version: 1.29.0
+model_uuid: 55ff5c141c864524a2e6086fcca9e2c1
+run_id: cb02c2c54d3a4a6e8ad71f40d3bc62d2
+utc_time_created: '2022-09-27 14:04:21.042221'

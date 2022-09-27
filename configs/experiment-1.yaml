@@ -1,4 +1,4 @@
-experiment_name: 'experiment_1'
+experiment_name: 'experiment_01'
 datasets:
     path: '/usr/src/processed-data/x.csv'
     path_y: '/usr/src/processed-data/y.csv'
@@ -53,5 +53,6 @@ models:
             - 'BayesianRidge'
             - 'ElasticNet'
 is_scaled: 
-    y: False
-    x: True
+    y: 0
+    x: 0
+    scaler: 'StandardScaler'

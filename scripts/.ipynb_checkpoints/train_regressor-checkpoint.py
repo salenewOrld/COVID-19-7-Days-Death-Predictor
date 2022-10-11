@@ -106,16 +106,20 @@ class Train:
                 x_train = scaler_x.fit_transform(x_train)
                 x_test = scaler_x.transform(x_test)
             joblib.dump(scaler_x, f'mlruns/scaler_x_{self.experiment_name}.pkl')
+        else :
+            scaler_x = None
         if self.config['is_scaled']['y'] == 1:
             print("Scaled Y")
             y_train = scaler_y.fit_transform(y_train)
             y_test = scaler_y.transform(y_test)
             joblib.dump(scaler_y, f'mlruns/scaler_y_{self.experiment_name}.pkl')
+        else :
+            scaler_y = None
         return x_train, x_test, y_train, y_test, scaler_x, scaler_y
     def fit(self):
         models = self.load_models(self.config)
         x_train, x_test, y_train, y_test, scaler_x, scaler_y = self.split_data()
-        self.train(models, x_train, x_test.reshape(-1, 1), y_train, y_test.reshape(-1, 1), scaler_y)
+        self.train(models, x_train, x_test, y_train.reshape(-1, 1), y_test.reshape(-1, 1), scaler_y)
         print('Successfully trained')
 def read_yaml(FILE_NAME):
     with open(f'/usr/src/configs/{FILE_NAME}', 'r') as yaml_file:
